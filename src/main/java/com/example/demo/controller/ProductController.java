@@ -111,7 +111,7 @@ public class ProductController {
         }
 
         try {
-            int i = pdtimg.getOriginalFilename().lastIndexOf('.');
+            int i =  pdtimg.getOriginalFilename().lastIndexOf('.');
             String substring = pdtimg.getOriginalFilename().substring(i + 1);
 
             String str = String.valueOf(UUID.randomUUID().toString()) + "." + substring;
