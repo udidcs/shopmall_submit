@@ -42,7 +42,7 @@ public class ProductController {
     @GetMapping("/images/{filename}")
     public Resource returnimage(@PathVariable String filename) throws MalformedURLException {
         String path = "file:/home/images/" + filename;
-        return new UrlResource(path);g
+        return new UrlResource(path);
     }
 
 //    @GetMapping("/download/{filename}")
