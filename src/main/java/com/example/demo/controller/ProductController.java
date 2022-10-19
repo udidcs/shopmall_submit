@@ -41,16 +41,16 @@ public class ProductController {
     @ResponseBody
     @GetMapping("/images/{filename}")
     public Resource returnimage(@PathVariable String filename) throws MalformedURLException {
-        String path = "file:\\" + System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\" + filename;
-        return new UrlResource(path);
+        String path = "file:/home/images/" + filename;
+        return new UrlResource(path);g
     }
 
-    @GetMapping("/download/{filename}")
-    public ResponseEntity<Resource> returnimagefile(@PathVariable String filename, HttpServletResponse res) throws MalformedURLException {
-        res.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-        String path = "file:\\" + System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\" + filename;
-        return ResponseEntity.ok().body(new UrlResource(path));
-    }
+//    @GetMapping("/download/{filename}")
+//    public ResponseEntity<Resource> returnimagefile(@PathVariable String filename, HttpServletResponse res) throws MalformedURLException {
+//        res.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
+//        String path = "file:\\" + System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\" + filename;
+//        return ResponseEntity.ok().body(new UrlResource(path));
+//    }
 
     @GetMapping("/addProduct")
     public String addProduct(HttpServletRequest req) {
@@ -116,8 +116,9 @@ public class ProductController {
 
             String str = String.valueOf(UUID.randomUUID().toString()) + "." + substring;
             pdt.setFilename(str);
-            pdtimg.transferTo(new File(System.getProperty("user.dir")
-                    + "\\src\\main\\resources\\static\\images\\" + str));
+//            pdtimg.transferTo(new File(System.getProperty("user.dir")
+//                    + "\\src\\main\\resources\\static\\images\\" + str));
+            pdtimg.transferTo(new File("/home/images/" + str));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
