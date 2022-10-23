@@ -41,7 +41,7 @@ public class ProductController {
     @ResponseBody
     @GetMapping("/images/{filename}")
     public Resource returnimage(@PathVariable String filename) throws MalformedURLException {
-        String path = "/home/ec2-user/jenkins/images/" + filename;
+        String path = "file:/home/ec2-user/jenkins/images/" + filename;
 //        String path = "file:/media/" + filename;
         return new UrlResource(path);
     }
