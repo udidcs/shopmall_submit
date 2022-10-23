@@ -24,7 +24,7 @@ public class HomeController {
         List<Product> products = repository.findAll();
         model.addAttribute("pdts", products);
 
-        return File.separator + "home";
+        return "home";
     }
 
 }
