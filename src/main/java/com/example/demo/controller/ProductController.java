@@ -58,18 +58,18 @@ public class ProductController {
         HttpSession session = req.getSession();
         if (session != null)
             session.invalidate();
-        return "redirect:/home";
+        return "redirect:home";
     }
 
     @GetMapping("/productInfo/{productId}")
     public String productInfo(HttpServletRequest req, @PathVariable Integer productId, Model model) {
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:/home";
+            return "redirect:home";
         }
         Product product = productService.getProduct(productId);
         model.addAttribute("prodt", product);
-        return "/productInfo";
+        return "productInfo";
     }
 
     @GetMapping("/productapi/{productId}")
@@ -92,14 +92,14 @@ public class ProductController {
     public String productForm(HttpServletRequest req) {
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:/home";
+            return "redirect:home";
         }
         return "/productForm";
     }
 
     @GetMapping("/editProduct")
     public String editProduct() {
-        return "/editProduct";
+        return "editProduct";
     }
 
     @Transactional
@@ -108,7 +108,7 @@ public class ProductController {
 
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:/home";
+            return "redirect:home";
         }
 
         try {
@@ -126,20 +126,20 @@ public class ProductController {
 
         productService.saveImage(pdt);
         Thread.sleep(3000);
-        return "redirect:/home";
+        return "redirect:home";
     }
 
     @PostMapping("/buyProduct/{pdtid}")
     public String buyProduct(HttpServletRequest req, @PathVariable Integer pdtid, @RequestParam Integer count, Model model) {
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:/home";
+            return "redirect:home";
         }
 
         productService.buyProduct(req, pdtid, count, model);
         Product product = productService.getProduct(pdtid);
         model.addAttribute("prodt", product);
-        return "/productInfo";
+        return "productInfo";
     }
 
     @GetMapping("/getProducts")
@@ -147,14 +147,14 @@ public class ProductController {
 
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:/home";
+            return "redirect:home";
         }
 
         List<Product> productsBySearch = productService.getProductsByKeyWord(keyword);
         model.addAttribute("pdts", productsBySearch);
         System.out.println(productsBySearch);
 
-        return "/home";
+        return "home";
     }
 
     @ResponseBody
