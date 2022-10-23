@@ -41,7 +41,7 @@ public class ProductController {
     @ResponseBody
     @GetMapping("/images/{filename}")
     public Resource returnimage(@PathVariable String filename) throws MalformedURLException {
-        String path = "file:\\" + System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\" + filename;
+        String path = "/home/ec2-user/jenkins/images/" + filename;
 //        String path = "file:/media/" + filename;
         return new UrlResource(path);
     }
@@ -117,8 +117,7 @@ public class ProductController {
 
             String str = String.valueOf(UUID.randomUUID().toString()) + "." + substring;
             pdt.setFilename(str);
-            pdtimg.transferTo(new File(System.getProperty("user.dir")
-                    + "/src/main/resources/static/images/" + str));
+            pdtimg.transferTo(new File("/home/ec2-user/jenkins/images/" +str));
 //            pdtimg.transferTo(new File("/media/" + str));
         } catch (IOException e) {
             throw new RuntimeException(e);
