@@ -22,7 +22,7 @@ public class HomeController {
     public String home(Model model) {
         List<Product> products = repository.findAll();
         model.addAttribute("pdts", products);
-        return "home";
+        return "/home";
     }
 
 }
