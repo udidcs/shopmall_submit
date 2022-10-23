@@ -94,7 +94,7 @@ public class ProductController {
         if (session == null) {
             return "redirect:home";
         }
-        return "/productForm";
+        return "productForm";
     }
 
     @GetMapping("/editProduct")
