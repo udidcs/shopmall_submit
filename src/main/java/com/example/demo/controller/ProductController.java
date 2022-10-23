@@ -118,7 +118,7 @@ public class ProductController {
             String str = String.valueOf(UUID.randomUUID().toString()) + "." + substring;
             pdt.setFilename(str);
             pdtimg.transferTo(new File(System.getProperty("user.dir")
-                    + "\\src\\main\\resources\\static\\images\\" + str));
+                    + "/src/main/resources/static/images/" + str));
 //            pdtimg.transferTo(new File("/media/" + str));
         } catch (IOException e) {
             throw new RuntimeException(e);
