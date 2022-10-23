@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.List;
 
@@ -22,7 +23,8 @@ public class HomeController {
     public String home(Model model) {
         List<Product> products = repository.findAll();
         model.addAttribute("pdts", products);
-        return "/home";
+
+        return File.separator + "home";
     }
 
 }

@@ -153,6 +153,7 @@ public class ProductController {
         List<Product> productsBySearch = productService.getProductsByKeyWord(keyword);
         model.addAttribute("pdts", productsBySearch);
         System.out.println(productsBySearch);
+
         return "/home";
     }
 
