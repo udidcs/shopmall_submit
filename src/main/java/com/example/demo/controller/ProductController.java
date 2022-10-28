@@ -73,7 +73,7 @@ public class ProductController {
         }
         Product product = productService.getProduct(productId);
         model.addAttribute("prodt", product);
-        return "/productInfo";
+        return "productInfo";
     }
 
     @GetMapping("/productapi/{productId}")
@@ -96,9 +96,9 @@ public class ProductController {
     public String productForm(HttpServletRequest req) {
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:/home";
+            return "redirect:home";
         }
-        return "/productForm";
+        return "productForm";
     }
 
     @GetMapping("/editProduct")
@@ -143,7 +143,7 @@ public class ProductController {
         productService.buyProduct(req, pdtid, count, model);
         Product product = productService.getProduct(pdtid);
         model.addAttribute("prodt", product);
-        return "/productInfo";
+        return "productInfo";
     }
 
     @GetMapping("/getProducts")
@@ -151,7 +151,7 @@ public class ProductController {
 
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:/home";
+            return "redirect:home";
         }
 
         List<Product> productsBySearch = productService.getProductsByKeyWord(keyword);

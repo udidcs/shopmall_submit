@@ -23,17 +23,17 @@ public class MemberController {
 
     @GetMapping("/loginForm")
     public String loginForm() {
-        return "/loginForm";
+        return "loginForm";
     }
 
     @GetMapping("/memberForm")
     public String memberForm() {
-        return "/memberForm";
+        return "memberForm";
     }
 
     @GetMapping("/editForm")
     public String editForm() {
-        return "/editForm";
+        return "editForm";
     }
 
     @GetMapping("/logout")
@@ -41,7 +41,7 @@ public class MemberController {
         HttpSession session = req.getSession(false);
         if (session != null)
             session.invalidate();
-        return "redirect:/home";
+        return "redirect:home";
     }
 
     @PostMapping("/member")
@@ -52,14 +52,14 @@ public class MemberController {
             if (mem != null) {
                 model.addAttribute("message", "이미 가입되어 있습니다.");
                 model.addAttribute("member", member);
-                return "/memberForm";
+                return "memberForm";
             }
 
             member.setMoney(50000);
             memberService.join(member);
             HttpSession session = req.getSession(true);
             session.setAttribute("login", member);
-            return "redirect:/home";
+            return "redirect:home";
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
@@ -72,18 +72,18 @@ public class MemberController {
         if (member == null) {
             model.addAttribute("message", "가입되어 있지 않습니다.");
             model.addAttribute("member", new MemberDto(id, password));
-            return "/loginForm";
+            return "loginForm";
         }
 
         if (!member.getPassword().equals(password)) {
             model.addAttribute("message", "비밀번호가 다릅니다.");
             model.addAttribute("member", new MemberDto(id, password));
-            return "/loginForm";
+            return "loginForm";
         }
 
         HttpSession session = req.getSession(true);
         session.setAttribute("login", member);
-        return "redirect:/home";
+        return "redirect:home";
     }
 
 }
