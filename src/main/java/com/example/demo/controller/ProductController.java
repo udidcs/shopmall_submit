@@ -69,7 +69,7 @@ public class ProductController {
     public String productInfo(HttpServletRequest req, @PathVariable Integer productId, Model model) {
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:home";
+            return "redirect:/home";
         }
         Product product = productService.getProduct(productId);
         model.addAttribute("prodt", product);
