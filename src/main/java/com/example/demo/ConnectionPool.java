@@ -11,9 +11,9 @@ public class ConnectionPool {
 
     static {
         ds = new HikariDataSource();
-//        ds.setJdbcUrl("jdbc:mysql://172.17.0.3:3306/udidc");
         ds.setJdbcUrl("jdbc:mysql://localhost:3306/udidc");
         ds.setUsername("root");
+//        ds.setPassword("1234");
         ds.setPassword("dlsgkeo1!");
         ds.setMaximumPoolSize(15);
     }

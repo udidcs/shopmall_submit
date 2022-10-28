@@ -13,7 +13,6 @@ import javax.persistence.Id;
 @NoArgsConstructor
 @Entity
 public class Product {
-
 	@Id
 	private Integer productId;
 	private String name;
@@ -22,6 +21,4 @@ public class Product {
 	private String manufacturer;
 	private Integer unitsInStock;
 	private String filename;
-
-
 }

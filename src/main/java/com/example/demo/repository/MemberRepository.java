@@ -23,7 +23,7 @@ public class MemberRepository {
             preparedStatement.setString(6, member.getMonth());
             preparedStatement.setString(7, member.getDay());
             preparedStatement.setString(8, member.getAddress());
-            preparedStatement.setInt(9, 50000);
+            preparedStatement.setInt(9, member.getMoney());
             preparedStatement.execute();
 
         } catch (SQLException e) {

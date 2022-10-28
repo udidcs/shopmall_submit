@@ -27,6 +27,38 @@ public class ProductRepository {
                 .getResultList();
     }
 
+    public ArrayList<Product> findTwolines(Connection connection, int pagenum) {
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        ArrayList<Product> list = new ArrayList<>();
+        try {
+            preparedStatement = connection.prepareStatement("select * from product limit ?, ?");
+            preparedStatement.setInt(1, 10*pagenum);
+            preparedStatement.setInt(2, 10*pagenum+10);
+            resultSet = preparedStatement.executeQuery();
+
+
+            while(resultSet.next()) {
+                Product pdt = new Product();
+                pdt.setProductId(resultSet.getInt("product_id"));
+                pdt.setName(resultSet.getString("name"));
+                pdt.setUnitPrice(resultSet.getInt("unit_price"));
+                pdt.setDescription(resultSet.getString("description"));
+                pdt.setManufacturer(resultSet.getString("manufacturer"));
+                pdt.setUnitsInStock(resultSet.getInt("units_in_Stock"));
+                pdt.setFilename(resultSet.getString("filename"));
+                list.add(pdt);
+            }
+            return list;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        finally {
+            JdbcUtils.closeStatement(preparedStatement);
+            JdbcUtils.closeResultSet(resultSet);
+        }
+    }
+
     public Product findById(Connection connection, Integer pdtid) {
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;

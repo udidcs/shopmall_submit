@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -21,7 +22,13 @@ public class HomeController {
     private ProductRepository repository;
     @GetMapping("/home")
     public String home(Model model) {
-        List<Product> products = repository.findAll();
+        Connection connection = ConnectionPool.getConnection();
+        List<Product> products = repository.findTwolines(connection, 0);
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         model.addAttribute("pdts", products);
 
         return "home";

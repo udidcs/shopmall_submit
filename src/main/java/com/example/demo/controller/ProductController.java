@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.ConnectionPool;
 import com.example.demo.domain.Member;
 import com.example.demo.domain.Product;
+import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.MemberService;
 import com.example.demo.service.ProductService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,12 +39,14 @@ public class ProductController {
     private MemberService memberService;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private ProductRepository repository;
 
     @ResponseBody
     @GetMapping("/images/{filename}")
     public Resource returnimage(@PathVariable String filename) throws MalformedURLException {
-        String path = "file:/home/ec2-user/jenkins/images/" + filename;
-//        String path = "file:/media/" + filename;
+//        String path = "file:\\" + System.getProperty("user.dir") + "\\src\\main\\resources\\static\\images\\" + filename;
+                String path = "file:/home/ec2-user/jenkins/images/" + filename;
         return new UrlResource(path);
     }
 
@@ -69,7 +73,7 @@ public class ProductController {
         }
         Product product = productService.getProduct(productId);
         model.addAttribute("prodt", product);
-        return "productInfo";
+        return "/productInfo";
     }
 
     @GetMapping("/productapi/{productId}")
@@ -92,9 +96,9 @@ public class ProductController {
     public String productForm(HttpServletRequest req) {
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:home";
+            return "redirect:/home";
         }
-        return "productForm";
+        return "/productForm";
     }
 
     @GetMapping("/editProduct")
@@ -117,14 +121,15 @@ public class ProductController {
 
             String str = String.valueOf(UUID.randomUUID().toString()) + "." + substring;
             pdt.setFilename(str);
+//          pdtimg.transferTo(new File(System.getProperty("user.dir")
+//                    + "\\src\\main\\resources\\static\\images\\" + str));
             pdtimg.transferTo(new File("/home/ec2-user/jenkins/images/" +str));
-//            pdtimg.transferTo(new File("/media/" + str));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         productService.saveImage(pdt);
-        Thread.sleep(3000);
         return "redirect:home";
     }
 
@@ -138,7 +143,7 @@ public class ProductController {
         productService.buyProduct(req, pdtid, count, model);
         Product product = productService.getProduct(pdtid);
         model.addAttribute("prodt", product);
-        return "productInfo";
+        return "/productInfo";
     }
 
     @GetMapping("/getProducts")
@@ -146,13 +151,12 @@ public class ProductController {
 
         HttpSession session = req.getSession(false);
         if (session == null) {
-            return "redirect:home";
+            return "redirect:/home";
         }
 
         List<Product> productsBySearch = productService.getProductsByKeyWord(keyword);
         model.addAttribute("pdts", productsBySearch);
         System.out.println(productsBySearch);
-
         return "home";
     }
 
@@ -164,4 +168,16 @@ public class ProductController {
         return productService.getRecommendedWords(word);
     }
 
+    @ResponseBody
+    @GetMapping("/findTwolines")
+    public ArrayList<Product> findTwolines(@RequestParam Integer pagenum) {
+        Connection connection = ConnectionPool.getConnection();
+        ArrayList<Product> twolines = repository.findTwolines(connection, pagenum);
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return twolines;
+    }
 }
