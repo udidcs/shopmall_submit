@@ -20,7 +20,7 @@ import java.util.List;
 public class HomeController {
     @Autowired
     private ProductRepository repository;
-    @GetMapping("//home")
+    @GetMapping("/home")
     public String home(Model model) {
         Connection connection = ConnectionPool.getConnection();
         List<Product> products = repository.findTwolines(connection, 0);
@@ -31,7 +31,7 @@ public class HomeController {
         }
         model.addAttribute("pdts", products);
 
-        return "/home";
+        return "home";
     }
 
 }

@@ -73,7 +73,7 @@ public class ProductController {
         }
         Product product = productService.getProduct(productId);
         model.addAttribute("prodt", product);
-        return "/productInfo";
+        return "productInfo";
     }
 
     @GetMapping("/productapi/{productId}")
