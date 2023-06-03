@@ -1,0 +1,317 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{header::header}">
+<style>
+	* {
+box-sizing: border-box;
+}
+
+body {
+background-image: url('../images/background.jpg');
+font-family: 'Noto Sans KR', sans-serif;
+}
+
+.chat-container {
+margin: 60px auto;
+width: 400px;
+box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+transition: width 0.3s ease;
+}
+
+.chat-header {
+background-color: white;
+position: relative;
+padding: 30px 8px 8px 8px;
+}
+
+.chat-header .header-btn {
+border-radius: 50%;
+border: none;
+width: 12px;
+height: 12px;
+cursor: pointer;
+position: absolute;
+top: 8px;
+padding: 0;
+}
+
+.chat-header #close {
+background-color: #ff6059;
+left: 8px;
+}
+
+.chat-header #minimize {
+background-color: #ffbf2f;
+left: 26px;
+}
+
+.chat-header #maximize {
+background-color: #29cd42;
+left: 44px;
+}
+
+.chat-header #profile-pic {
+vertical-align: middle;
+border-radius: 50%;
+}
+
+.chat-header #username {
+vertical-align: middle;
+font-size: 14px;
+font-weight: 500;
+margin-left: 5px;
+color: #343434;
+}
+
+/* chat box */
+
+.chatbox {
+height: 400px;
+background-color: #d7e4f2;
+padding: 10px;
+overflow-y: scroll;
+position: relative;
+}
+
+.bubble {
+margin: 5px 0;
+display: inline-block;
+max-width: 300px;
+font-size: 14px;
+position: relative;
+}
+
+.friend-bubble {
+background-color: white;
+border-radius: 14px 14px 14px 0;
+padding: 7px 15px 7px 15px;
+float: left;
+clear: both;
+}
+
+.my-bubble {
+background-color: #fff46d;
+border-radius: 14px 14px 0px 14px;
+padding: 7px 15px 7px 15px;
+float: right;
+clear: both;
+}
+
+/* text box */
+
+.text-box {
+background-color: #fafafa;
+padding: 10px;
+}
+
+.text-box textarea {
+height: 60px;
+float: left;
+width: calc(100% - 70px);
+border-radius: 3px;
+background-color: #ffffff;
+border: solid 0.5px #d7d7d7;
+resize: none;
+padding: 10px;
+font-size: 14px;
+}
+
+#send {
+background-color: #4a90e2;
+width: 60px;
+height: 60px;
+color: white;
+border: none;
+border-radius: 3px;
+cursor: pointer;
+margin-left: 10px;
+float: left;
+}
+</style>
+</head>
+<body>
+<script>
+var xmlHttp = new XMLHttpRequest();
+
+let pagenum = 1;
+
+function moreitems() {
+	const xhr = new XMLHttpRequest();
+	const method = "GET";
+<!--	const url = "http://localhost:8083/findTwolines?pagenum=" + pagenum;-->
+	const url = "http://43.201.16.130:8083/findTwolines?pagenum=" + pagenum;
+	pagenum += 1;
+	console.log(url)
+
+	xhr.open(method, url);
+	xhr.send();
+	// onreadystatechange 이벤트를 이용해 요청에 대한 응답 결과를 처리합니다.
+	xhr.onreadystatechange = function (event) {
+	const { target } = event;
+
+	if (target.readyState === XMLHttpRequest.DONE) {
+		const { status } = target;
+
+		if (status === 0 || (status >= 200 && status < 400)) {
+
+			let text = target.responseText;
+			console.log(typeof(text));
+			if (text.length == 2) {
+				document.getElementById("morebutton").innerText = "상품 없음";
+				return;
+			}
+			text = JSON.parse(text);
+
+			for(let i=0; i<text.length; i++) {
+				let atag = document.createElement('a');
+				console.log(text)
+				atag.setAttribute("href", "/productInfo/" + text[i].productId);
+				atag.setAttribute("style", "display:inline-block; border: 1px solid gray; border-radius: 12px; width:200px; height:330px; margin: 0px 0px 20px 4.8%;");
+				let img = document.createElement('img');
+				img.setAttribute("src", "/images/" + text[i].filename);
+				img.setAttribute("style", "display:block; width: 100%; height:74%; border-radius: 10px 10px 0px 0px")
+				atag.appendChild(img)
+				let div = document.createElement('div');
+				div.setAttribute("style", "display:inline-block");
+				atag.appendChild(div)
+
+				let div1 = document.createElement('div');
+				let div2 = document.createElement('div');
+				let div3 = document.createElement('div');
+				let div4 = document.createElement('div');
+				div1.setAttribute("style", "width:200px; text-align : center; font-size: 14px; margin-left: 1px");
+				div1.innerText = "상품번호 : " + text[i].productId;
+				div2.setAttribute("style", "width:200px; text-align : center; font-size: 14px; margin-left: 1px");
+				div2.innerText = "상품명 : " + text[i].name;
+				div3.setAttribute("style", "width:200px; text-align : center; font-size: 14px; margin-left: 1px");
+				div3.innerText = "제조 : " + text[i].manufacturer;
+				div4.setAttribute("style", "width:200px; text-align : center; font-size: 14px; margin-left: 1px");
+				div4.innerText = "잔여 : " + text[i].unitsInStock;
+				div.appendChild(div1);
+				div.appendChild(div2);
+				div.appendChild(div3);
+				div.appendChild(div4);
+
+				document.querySelector("#contents").append(atag);
+			}
+
+		} else {
+			console.log("fail");
+		}
+
+		}
+	}
+}
+
+function myFunction() {
+	let value = document.getElementById('input').value;
+
+	const xhr = new XMLHttpRequest();
+	const method = "GET";
+	const url = "http://localhost:8083/getRecommendedWords?word=" + value;
+<!--	const url = "http://43.201.16.130:8083/getRecommendedWords?word=" + value;-->
+	console.log(url)
+
+	xhr.open(method, url);
+	xhr.send();
+	// onreadystatechange 이벤트를 이용해 요청에 대한 응답 결과를 처리합니다.
+	xhr.onreadystatechange = function (event) {
+	const { target } = event;
+
+	if (target.readyState === XMLHttpRequest.DONE) {
+		const { status } = target;
+
+		if (status === 0 || (status >= 200 && status < 400)) {
+
+			document.querySelector("#divs").innerText = '';
+			let a = target.responseText;
+			if (target.responseText == "" || target.responseText == undefined || target.responseText == null) {
+				return;
+			}
+
+			a = JSON.parse(a);
+			let div = document.createElement('div');
+			div.setAttribute("style", "display: inline-block; height: 40px; size:20px; margin:5px 14px 5px 0px ; padding:8px; border: 1px solid gray; border-radius: 5px; font-weight: bold;");
+			div.innerText = '추천 검색어';
+			document.querySelector("#divs").append(div);
+
+			for(let i=0; i<a.length; i++) {
+				let div = document.createElement('div');
+				div.setAttribute("style", "display: inline-block; height: 40px; size:20px; margin:5px 14px 5px 0px; padding:8px; border: 1px solid gray; border-radius: 5px");
+				div.innerText = a[i];
+				document.querySelector("#divs").append(div);
+			}
+		} else {
+			console.log("fail");
+		}
+
+		}
+	}
+}
+
+</script>
+<nav th:replace="~{header::nav}">
+</nav>
+<form action="/getProducts" method="get">
+	<input id="input" oninput="myFunction()" name="keyword" placeholder="검색" size="120px" style="margin: 2% 17% 0% 17%; line-height:34px; border: 1px solid gray; border-radius: 5px">
+</form>
+<div id="divs" style="margin-left: 4.8%"></div>
+<div class="container">
+	<div class="row">
+		<div class="col-9">
+			<div class="container">
+				<div class="row">
+					<div th:each="pdt:${pdts}" style="width:32%; height:360px; margin: 5px; border: 1px solid gray; border-radius:5px">
+						<img th:src="@{/images/{pdtid}(pdtid=${pdt.filename})}" style="margin-top:12px; width:100%; height:230px;"/>
+						<div>
+							<div style="text-align: center; font-size: 14px; margin-left: 1px;" th:text="'상품번호 : ' + ${pdt.productId}"></div>
+							<div style="text-align: center; font-size: 14px; margin-left: 1px;" th:text="'상품명 : ' + ${pdt.name}"></div>
+							<div style="text-align: center; font-size: 14px; margin-left: 1px;" th:text="'제조 : ' + ${pdt.manufacturer}"></div>
+							<div style="text-align: center; font-size: 14px; margin-left: 1px;" th:text="'잔여 : ' + ${pdt.unitsInStock}"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-3" style="display: inline-block">
+			<div class="chat-container">
+				<img src="chatbot.jpg" style="width:60px; height: 60px; display: inline-block">
+				<span id="username" style="font-size: 20px">다판다 챗봇</span>
+
+				<div class="chatbox" style="border: 1px solid black; height: 500px; margin-top: 2px;">
+					<div class="friend-bubble bubble" style="background-color: yellow">
+						안녕하세요. 다판다 쇼핑몰에 오신걸 환영합니다. 궁금한게 있으면 물어보세요.
+					</div>
+				</div>
+
+				<div class="text-box" style="margin-top: 7px">
+					<textarea style="width: 100%;"></textarea>
+					<button id="send" style="margin-top: 7px">전송</button>
+					<div class="clearfix"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<button id="morebutton" type="button" onclick="moreitems()" style="height:36px; width:120px; margin: 2% 17% 0% 45%; line-height:34px; border: 1px solid gray; border-radius: 5px">상품 더보기</button>
+<br>
+<br>
+
+</body>
+<script
+		src="https://code.jquery.com/jquery-3.2.1.min.js"
+		integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+		crossorigin="anonymous"></script>
+<script src="js/script.js"></script>
+<script>
+	$('#send').on('click', send);
+function send() {
+    var message = $('textarea').val();
+    console.log(message);
+    if(message){
+    $('.chatbox').append('<div class="my-bubble bubble">'+message+'</div>');
+    $('textarea').val('');
+    }
+}
+</script>
+</html>
+
