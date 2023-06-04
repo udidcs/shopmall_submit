@@ -1,0 +1,28 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{header::header}">
+</head>
+<body>
+<nav th:replace="~{header::nav}">
+</nav>
+<br>
+<div class="container">
+  <h3 style="margin-left: 47%">오픈Api</h3>
+</div>
+<br>
+<div class="container" align="center">
+  <div class="col-md-4 col-md-offset-4">
+    <form class="form-signin" action="/login" method="post">
+      <div style="color: red; font-size:18px" th:if=${message} th:text=${message}></div>
+      <div class="form-group">
+        <input th:value=${member?.id} type="text" class="form-control" placeholder="ID" name="id" required autofocus>
+      </div>
+      <div class="form-group">
+        <input th:value=${member?.password} type="password" class="form-control" placeholder="Password" name="password" required>
+      </div>
+      <br>
+      <button class="btn btn btn-lg btn-success btn-block" type="submit">로그인</button>
+    </form>
+  </div>
+</div>
+</body>
+</html>

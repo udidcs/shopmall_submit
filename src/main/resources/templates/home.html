@@ -137,10 +137,9 @@ let pagenum = 1;
 function moreitems() {
 	const xhr = new XMLHttpRequest();
 	const method = "GET";
-<!--	const url = "http://localhost:8083/findTwolines?pagenum=" + pagenum;-->
-	const url = "http://43.201.16.130:8083/findTwolines?pagenum=" + pagenum;
+	const url = "http://localhost:8083/findTwolines?pagenum=" + pagenum;
+<!--	const url = "http://43.201.16.130:8083/findTwolines?pagenum=" + pagenum;-->
 	pagenum += 1;
-	console.log(url)
 
 	xhr.open(method, url);
 	xhr.send();
@@ -162,36 +161,39 @@ function moreitems() {
 			text = JSON.parse(text);
 
 			for(let i=0; i<text.length; i++) {
+				let rootdiv = document.createElement('div');
+				rootdiv.setAttribute("style", "width:32%; height:390px; margin: 5px; border: 1px solid gray; border-radius:5px")
 				let atag = document.createElement('a');
-				console.log(text)
+				rootdiv.appendChild(atag)
 				atag.setAttribute("href", "/productInfo/" + text[i].productId);
-				atag.setAttribute("style", "display:inline-block; border: 1px solid gray; border-radius: 12px; width:200px; height:330px; margin: 0px 0px 20px 4.8%;");
 				let img = document.createElement('img');
 				img.setAttribute("src", "/images/" + text[i].filename);
-				img.setAttribute("style", "display:block; width: 100%; height:74%; border-radius: 10px 10px 0px 0px")
+				img.setAttribute("style", "margin-top:12px; width:100%; height:280px;")
 				atag.appendChild(img)
 				let div = document.createElement('div');
-				div.setAttribute("style", "display:inline-block");
+				div.setAttribute("style", "margin-top: 5px; margin-bottom: 5px");
 				atag.appendChild(div)
+
+
 
 				let div1 = document.createElement('div');
 				let div2 = document.createElement('div');
 				let div3 = document.createElement('div');
 				let div4 = document.createElement('div');
-				div1.setAttribute("style", "width:200px; text-align : center; font-size: 14px; margin-left: 1px");
+				div1.setAttribute("style", "text-align: center; font-size: 14px; margin-left: 1px");
 				div1.innerText = "상품번호 : " + text[i].productId;
-				div2.setAttribute("style", "width:200px; text-align : center; font-size: 14px; margin-left: 1px");
+				div2.setAttribute("style", "text-align: center; font-size: 14px; margin-left: 1px");
 				div2.innerText = "상품명 : " + text[i].name;
-				div3.setAttribute("style", "width:200px; text-align : center; font-size: 14px; margin-left: 1px");
+				div3.setAttribute("style", "text-align: center; font-size: 14px; margin-left: 1px");
 				div3.innerText = "제조 : " + text[i].manufacturer;
-				div4.setAttribute("style", "width:200px; text-align : center; font-size: 14px; margin-left: 1px");
+				div4.setAttribute("style", "text-align: center; font-size: 14px; margin-left: 1px");
 				div4.innerText = "잔여 : " + text[i].unitsInStock;
 				div.appendChild(div1);
 				div.appendChild(div2);
 				div.appendChild(div3);
 				div.appendChild(div4);
 
-				document.querySelector("#contents").append(atag);
+				document.querySelector("#contents").append(rootdiv);
 			}
 
 		} else {
@@ -251,18 +253,20 @@ function myFunction() {
 </script>
 <nav th:replace="~{header::nav}">
 </nav>
-<form action="/getProducts" method="get">
+<form action="/getProductsByKeyWord" method="get">
 	<input id="input" oninput="myFunction()" name="keyword" placeholder="검색" size="120px" style="margin: 2% 17% 0% 17%; line-height:34px; border: 1px solid gray; border-radius: 5px">
 </form>
-<div id="divs" style="margin-left: 4.8%"></div>
+<div id="divs" style="margin-left: 18%"></div>
 <div class="container">
 	<div class="row">
 		<div class="col-9">
 			<div class="container">
-				<div class="row">
-					<div th:each="pdt:${pdts}" style="width:32%; height:360px; margin: 5px; border: 1px solid gray; border-radius:5px">
-						<img th:src="@{/images/{pdtid}(pdtid=${pdt.filename})}" style="margin-top:12px; width:100%; height:230px;"/>
-						<div>
+				<div class="row" id="contents">
+					<div th:each="pdt:${pdts}" style="width:32%; height:390px; margin: 5px; border: 1px solid gray; border-radius:5px">
+						<a th:href="@{/productInfo/{pdtid}(pdtid=${pdt.productId})}">
+							<img th:src="@{/images/{pdtid}(pdtid=${pdt.filename})}" style="margin-top:12px; width:100%; height:280px;"/>
+						</a>
+						<div style="margin-top: 5px; margin-bottom: 5px">
 							<div style="text-align: center; font-size: 14px; margin-left: 1px;" th:text="'상품번호 : ' + ${pdt.productId}"></div>
 							<div style="text-align: center; font-size: 14px; margin-left: 1px;" th:text="'상품명 : ' + ${pdt.name}"></div>
 							<div style="text-align: center; font-size: 14px; margin-left: 1px;" th:text="'제조 : ' + ${pdt.manufacturer}"></div>
@@ -270,6 +274,7 @@ function myFunction() {
 						</div>
 					</div>
 				</div>
+
 			</div>
 		</div>
 		<div class="col-3" style="display: inline-block">
@@ -292,6 +297,7 @@ function myFunction() {
 		</div>
 	</div>
 </div>
+
 <button id="morebutton" type="button" onclick="moreitems()" style="height:36px; width:120px; margin: 2% 17% 0% 45%; line-height:34px; border: 1px solid gray; border-radius: 5px">상품 더보기</button>
 <br>
 <br>

@@ -67,10 +67,7 @@ public class ProductController {
 
     @GetMapping("/productInfo/{productId}")
     public String productInfo(HttpServletRequest req, @PathVariable Integer productId, Model model) {
-        HttpSession session = req.getSession(false);
-        if (session == null) {
-            return "redirect:/home";
-        }
+
         Product product = productService.getProduct(productId);
         model.addAttribute("prodt", product);
         return "productInfo";
@@ -135,10 +132,6 @@ public class ProductController {
 
     @PostMapping("/buyProduct/{pdtid}")
     public String buyProduct(HttpServletRequest req, @PathVariable Integer pdtid, @RequestParam Integer count, Model model) {
-        HttpSession session = req.getSession(false);
-        if (session == null) {
-            return "redirect:home";
-        }
 
         productService.buyProduct(req, pdtid, count, model);
         Product product = productService.getProduct(pdtid);
@@ -146,13 +139,8 @@ public class ProductController {
         return "productInfo";
     }
 
-    @GetMapping("/getProducts")
-    public String getProducts(@RequestParam String keyword, HttpServletRequest req, Model model) {
-
-        HttpSession session = req.getSession(false);
-        if (session == null) {
-            return "redirect:home";
-        }
+    @GetMapping("/getProductsByKeyWord")
+    public String getProductsByKeyWord(@RequestParam String keyword, HttpServletRequest req, Model model) {
 
         List<Product> productsBySearch = productService.getProductsByKeyWord(keyword);
         model.addAttribute("pdts", productsBySearch);

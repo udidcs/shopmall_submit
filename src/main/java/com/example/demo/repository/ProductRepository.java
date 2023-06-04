@@ -33,8 +33,8 @@ public class ProductRepository {
         ArrayList<Product> list = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement("select * from product limit ?, ?");
-            preparedStatement.setInt(1, 10*pagenum);
-            preparedStatement.setInt(2, 10*pagenum+10);
+            preparedStatement.setInt(1, 6*pagenum);
+            preparedStatement.setInt(2, 6*pagenum+6);
             resultSet = preparedStatement.executeQuery();
 
 
