@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.ConnectionPool;
-import com.example.demo.domain.Member;
 import com.example.demo.domain.Product;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.MemberService;
@@ -10,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -65,29 +64,9 @@ public class ProductController {
         return "redirect:home";
     }
 
-    @GetMapping("/productInfo/{productId}")
-    public String productInfo(HttpServletRequest req, @PathVariable Integer productId, Model model) {
 
-        Product product = productService.getProduct(productId);
-        model.addAttribute("prodt", product);
-        return "productInfo";
-    }
 
-    @GetMapping("/productapi/{productId}")
-    public void productapi(@PathVariable Integer productId, HttpServletResponse res) {
-        Product product = productService.getProduct(productId);
-        try {
-            if (product == null) {
-                res.setStatus(202);
-                res.getWriter().write(objectMapper.writeValueAsString("{\"info\": \"no product\"}"));
-            } else {
-                res.getWriter().write(objectMapper.writeValueAsString(product));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return;
-    }
+
 
     @GetMapping("/productForm")
     public String productForm(HttpServletRequest req) {
@@ -98,10 +77,7 @@ public class ProductController {
         return "productForm";
     }
 
-    @GetMapping("/editProduct")
-    public String editProduct() {
-        return "editProduct";
-    }
+
 
     @Transactional
     @PostMapping("/upload")
